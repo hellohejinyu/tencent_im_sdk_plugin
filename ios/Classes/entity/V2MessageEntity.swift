@@ -169,7 +169,7 @@ public class V2MessageEntity {
         return [
             "data": String.init(data: customElem.data, encoding: String.Encoding.utf8) ?? "",
             "desc": customElem.desc  as Any,
-            "extension": customElem.extension  as Any
+            "extension": customElem.ext  as Any
         ]
     }
     

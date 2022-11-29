@@ -134,7 +134,7 @@ class MessageManager {
                     let customElem:[String:Any] = message?["customElem"] as! [String : Any];
                     messages?[0].customElem.data = (customElem["data"] as? String)?.data(using: .utf8)
                     messages?[0].customElem.desc = customElem["desc"]  as? String
-                    messages?[0].customElem.extension = customElem["extension"] as? String ;
+                    messages?[0].customElem.ext = customElem["extension"] as? String ;
                 }
                 
                 async({
@@ -1087,8 +1087,8 @@ class MessageManager {
                             resItem["resultCode"] = res.resultCode as Any;
                             resItem["resultInfo"] = res.resultInfo as Any;
                             var extentionDict = [String:String]();
-                            extentionDict["extensionKey"] = res.extension.extensionKey;
-                            extentionDict["extensionValue"] = res.extension.extensionValue;
+                            extentionDict["extensionKey"] = res.ext.extensionKey;
+                            extentionDict["extensionValue"] = res.ext.extensionValue;
                             resItem["extension"] = extentionDict;
                             resList.append(resItem);
                         }
@@ -1154,8 +1154,8 @@ class MessageManager {
                             resItem["resultCode"] = res.resultCode as Any;
                             resItem["resultInfo"] = res.resultInfo as Any;
                             var extentionDict = [String:String]();
-                            extentionDict["extensionKey"] = res.extension.extensionKey;
-                            extentionDict["extensionValue"] = res.extension.extensionValue;
+                            extentionDict["extensionKey"] = res.ext.extensionKey;
+                            extentionDict["extensionValue"] = res.ext.extensionValue;
                             resItem["extension"] = extentionDict;
                             resList.append(resItem);
                         }

@@ -25,7 +25,7 @@ Tencent IM SDK For Flutter
   s.vendored_frameworks = '**/*.framework'
 
   # SDK 依赖
-  s.dependency 'TXIMSDK_Plus_iOS', "6.7.3184"
+  s.dependency 'TXIMSDK_Plus_iOS', "6.9.3557"
   # s.dependency 'TXIMSDK_Smart_iOS'
   # s.dependency 'BrightFutures'
   s.dependency 'HydraAsync'

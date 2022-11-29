@@ -65,9 +65,9 @@ public class TencentImUtils {
         break
       case 2:
         message = (V2TIMManager.sharedInstance()?.createCustomMessage(
-            (messageMap["data"] as? String)?.data(using: String.Encoding.utf8, allowLossyConversion: true),
-			desc: messageMap["desc"] as? String,
-			extension: messageMap["extension"] as? String
+            data: (messageMap["data"] as? String)?.data(using: String.Encoding.utf8, allowLossyConversion: true),
+            desc: messageMap["desc"] as? String,
+            ext: messageMap["extension"] as? String
         ))  ?? V2TIMMessage();
         break
       case 3:
