@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.Random;
 
 public class MessageManager {
-    private static MethodChannel channel;
+    private static List<MethodChannel> channels = new LinkedList<>();
     private static V2TIMMessageManager manager;
     private static V2TIMAdvancedMsgListener advacedMessageListener;// There can only be one listener for the time being
     private static HashMap<String,V2TIMMessage> messageIDMap = new HashMap(); // Used to temporarily store the created message
@@ -38,9 +38,14 @@ public class MessageManager {
     private static  HashMap<String, V2TIMAdvancedMsgListener> advancedMessageListenerList= new HashMap();
 
     public MessageManager(MethodChannel _channel){
-        MessageManager.channel = _channel;
+        MessageManager.channels.add(_channel);
         MessageManager.manager = V2TIMManager.getMessageManager();
     }
+
+    public static void cleanChannels() {
+        channels = new LinkedList<>();
+    }
+
     public V2TIMElem getElem (V2TIMMessage message){
         int type = message.getElemType();
         V2TIMElem elem;
@@ -164,7 +169,9 @@ public class MessageManager {
         }
     }
     private <T> void  makeAddAdvancedMsgListenerEventData(String type,T data, String listenerUuid){
-        CommonUtil.emitEvent(MessageManager.channel,"advancedMsgListener",type,data, listenerUuid);
+        for (MethodChannel channel : channels) {
+            CommonUtil.emitEvent(channel,"advancedMsgListener",type,data, listenerUuid);
+        }
     }
 
     private <T> T getMapValue(HashMap<String,T> map,String key){

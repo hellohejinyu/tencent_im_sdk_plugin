@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:flutter/services.dart';
 import 'package:tencent_im_sdk_plugin/enum/V2TimAdvancedMsgListener.dart';
 import 'package:tencent_im_sdk_plugin/enum/V2TimConversationListener.dart';
 import 'package:tencent_im_sdk_plugin/enum/V2TimFriendshipListener.dart';
@@ -18,24 +19,20 @@ import 'package:tencent_im_sdk_plugin/manager/v2_tim_group_manager.dart';
 import 'package:tencent_im_sdk_plugin/manager/v2_tim_message_manager.dart';
 import 'package:tencent_im_sdk_plugin/manager/v2_tim_offline_push_manager.dart';
 import 'package:tencent_im_sdk_plugin/manager/v2_tim_signaling_manager.dart';
-import 'package:flutter/services.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_change_info.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_change_info.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_info.dart';
-
 import 'package:tencent_im_sdk_plugin/models/v2_tim_callback.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_conversation.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_application.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_info.dart';
-
+import 'package:tencent_im_sdk_plugin/models/v2_tim_group_change_info.dart';
+import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_change_info.dart';
+import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_info.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_message_receipt.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_topic_info.dart';
-
+import 'package:tencent_im_sdk_plugin/models/v2_tim_user_full_info.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_user_info.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_user_status.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_user_full_info.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/im_flutter_plugin_platform_interface.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_message_extension.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/utils/const.dart';
@@ -105,9 +102,7 @@ class V2TIMManager {
 
   late Map<String, V2TimGroupListener> groupListenerList = {};
 
-  ///@nodoc
   V2TIMManager(MethodChannel channel) {
-    this._channel = channel;
     this.v2ConversationManager = new V2TIMConversationManager(channel);
     this.v2TIMMessageManager = new V2TIMMessageManager(channel);
     this.v2TIMFriendshipManager = new V2TIMFriendshipManager(channel);
@@ -125,8 +120,8 @@ class V2TIMManager {
     }
   }
 
-  void addNativeCallback(MethodChannel _channel) {
-    _channel.setMethodCallHandler((call) {
+  void addNativeCallback(MethodChannel channel) {
+    channel.setMethodCallHandler((call) {
       try {
         if (call.method == ListenerType.simpleMsgListener) {
           Map<String, dynamic> data = this.formatJson(call.arguments);

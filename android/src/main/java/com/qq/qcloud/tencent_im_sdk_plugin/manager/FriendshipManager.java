@@ -24,12 +24,15 @@ import java.util.List;
 
 
 public class FriendshipManager {
-    private static MethodChannel channel;
+    private static List<MethodChannel> channels = new LinkedList<>();
     private static  HashMap<String, V2TIMFriendshipListener> friendshipListenerList= new HashMap();
     public FriendshipManager(MethodChannel _channel){
-        FriendshipManager.channel = _channel;
+        FriendshipManager.channels.add(_channel);
     }
 
+    public static void cleanChannels(){
+       channels = new LinkedList<>();
+    }
 
     public void setFriendListener(MethodCall methodCall, final MethodChannel.Result result){
         final  String listenerUuid = methodCall.argument("listenerUuid");
@@ -177,7 +180,9 @@ public class FriendshipManager {
         }
     }
     private <T> void  makeFriendListenerEventData(String type,T data, String listenerUuid){
-        CommonUtil.emitEvent(FriendshipManager.channel,"friendListener",type,data, listenerUuid);
+        for (MethodChannel channel : channels) {
+            CommonUtil.emitEvent(channel,"friendListener",type,data, listenerUuid);
+        }
     }
     public void getFriendList(MethodCall methodCall, final MethodChannel.Result result){
         V2TIMManager.getFriendshipManager().getFriendList(new V2TIMValueCallback<List<V2TIMFriendInfo>>() {

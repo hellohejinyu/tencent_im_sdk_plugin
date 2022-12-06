@@ -28,10 +28,15 @@ import java.util.Map;
 
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
+
 public class GroupManager {
-    private static MethodChannel channel;
+    private static List<MethodChannel> channels = new LinkedList<>();
     public GroupManager(MethodChannel _channel){
-        GroupManager.channel = _channel;
+        GroupManager.channels.add(_channel);
+    }
+
+    public static void cleanChannels() {
+        channels = new LinkedList<>();
     }
 
 

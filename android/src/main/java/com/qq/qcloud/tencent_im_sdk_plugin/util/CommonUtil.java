@@ -60,6 +60,8 @@ import com.tencent.imsdk.v2.V2TIMVideoElem;
 import com.tencent.imsdk.v2.V2TIMGroupMessageReadMemberList;
 
 
+import org.json.JSONObject;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -379,6 +381,27 @@ public class CommonUtil {
         V2TIMTextElem textElem = (V2TIMTextElem) elem;
         messageElem.put("text",textElem.getText());
         return messageElem;
+    }
+
+    public static void writeLog(String content,boolean isRes){
+        try {
+            JSONObject param = new JSONObject();
+            param.put("logLevel", 5);
+            param.put("fileName", isRes? "tencent_im_flutter_sdk_res":"tencent_im_flutter_sdk");
+            param.put("logContent", content);
+
+            V2TIMManager.getInstance().callExperimentalAPI("writeLog", param.toString(), new V2TIMValueCallback<Object>() {
+                @Override
+                public void onError(int code, String desc) {
+                }
+
+                @Override
+                public void onSuccess(Object object) {
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static  HashMap<String,Object> convertImageMessageElem(V2TIMImageElem elem) {

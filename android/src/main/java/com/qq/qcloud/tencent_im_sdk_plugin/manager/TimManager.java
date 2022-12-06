@@ -39,17 +39,21 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 
 public class TimManager {
-
     public static String TAG = "tencent_im_sdk_plugin";
-    private static MethodChannel channel;
+    private static List<MethodChannel> channels = new LinkedList<>();
     private static HashMap<String, V2TIMSimpleMsgListener> simpleMsgListenerMap = new HashMap<>();
     private static HashMap<String, V2TIMGroupListener> groupListenerMap = new HashMap<>();
     private static HashMap<String, V2TIMSDKListener> initListenerMap = new HashMap<>();
     public static Context context;
-    public TimManager(MethodChannel _channel, Context context){
-        TimManager.channel = _channel;
+    public TimManager(MethodChannel channel, Context context){
+        TimManager.channels.add(channel);
         TimManager.context = context;
     }
+
+    public static void cleanChannels() {
+        channels = new LinkedList<>();
+    }
+
     public void addSimpleMsgListener(MethodCall methodCall, MethodChannel.Result result){
         final String listenerUuid = CommonUtil.getParam(methodCall,result,"listenerUuid");
         final V2TIMSimpleMsgListener listener = new V2TIMSimpleMsgListener(){
@@ -243,13 +247,19 @@ public class TimManager {
 
     }
     private <T> void  makeEventData(String type,T data, String listenerUuid){
-        CommonUtil.emitEvent(TimManager.channel,"initSDKListener",type,data, listenerUuid);
+        for (MethodChannel channel : channels) {
+            CommonUtil.emitEvent(channel,"initSDKListener",type,data, listenerUuid);
+        }
     }
     private <T> void  makeaddSimpleMsgListenerEventData(String type,T data, String listenerID){
-        CommonUtil.emitEvent(TimManager.channel,"simpleMsgListener",type,data,listenerID);
+        for (MethodChannel channel : channels) {
+            CommonUtil.emitEvent(channel,"simpleMsgListener",type,data,listenerID);
+        }
     }
     private <T> void  makeaddGroupListenerEventData(String type,T data, String listenerUuid){
-        CommonUtil.emitEvent(TimManager.channel,"groupListener",type,data, listenerUuid);
+        for (MethodChannel channel : channels) {
+            CommonUtil.emitEvent(channel,"groupListener",type,data, listenerUuid);
+        }
     }
     public void unInitSDK(MethodCall methodCall, final MethodChannel.Result result){
         V2TIMManager.getInstance().unInitSDK();

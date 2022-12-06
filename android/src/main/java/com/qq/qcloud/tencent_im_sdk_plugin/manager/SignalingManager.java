@@ -18,11 +18,15 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 
 public class SignalingManager {
-    private static MethodChannel channel;
+    private static List<MethodChannel> channels = new LinkedList<>();
     private static HashMap<String,String> invitedIDMap = new HashMap();
     private  static HashMap<String, V2TIMSignalingListener> signalListenerList = new HashMap<>();
     public SignalingManager(MethodChannel _channel){
-        SignalingManager.channel = _channel;
+        SignalingManager.channels.add(_channel);
+    }
+
+    public static void cleanChannels() {
+        channels = new LinkedList<>();
     }
 
     public void addSignalingListener(MethodCall methodCall, final MethodChannel.Result result){
@@ -95,7 +99,9 @@ public class SignalingManager {
     }
 
     private <T> void  makeSignalingListenerEventData(String type,T data, String listenerUuid){
-        CommonUtil.emitEvent(SignalingManager.channel,"signalingListener",type,data, listenerUuid);
+        for (MethodChannel channel : channels) {
+            CommonUtil.emitEvent(channel,"signalingListener",type,data, listenerUuid);
+        }
     }
     public void invite(final MethodCall methodCall, final MethodChannel.Result result){
         CommonUtil.checkAbility(methodCall, new AbCallback() {

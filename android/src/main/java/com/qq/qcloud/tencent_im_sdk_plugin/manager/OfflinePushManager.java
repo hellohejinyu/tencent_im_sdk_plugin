@@ -6,13 +6,21 @@ import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMOfflinePushConfig;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 
 public class OfflinePushManager {
-    private static MethodChannel channel;
+    private static List<MethodChannel> channels = new LinkedList<>();
+
     public OfflinePushManager(MethodChannel _channel){
-        OfflinePushManager.channel = _channel;
+        OfflinePushManager.channels.add(_channel);
+    }
+
+    public static void cleanChannels() {
+        channels = new LinkedList<>();
     }
 
     public void setOfflinePushConfig(final MethodCall methodCall, final MethodChannel.Result result){

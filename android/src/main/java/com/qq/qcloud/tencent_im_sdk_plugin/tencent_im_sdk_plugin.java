@@ -28,6 +28,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 
 /**
@@ -48,7 +50,7 @@ tencent_im_sdk_plugin implements FlutterPlugin, MethodChannel.MethodCallHandler 
     /**
      * Communication pipeline with Flutter
      */
-    private static MethodChannel channel;
+    private static List<MethodChannel> channels = new LinkedList<>();
     private static MessageManager messageManager;
     private static GroupManager groupManager;
     private static SignalingManager signalingManager;
@@ -62,7 +64,7 @@ tencent_im_sdk_plugin implements FlutterPlugin, MethodChannel.MethodCallHandler 
 
     private tencent_im_sdk_plugin(Context context, MethodChannel channel) {
         tencent_im_sdk_plugin.context = context;
-        tencent_im_sdk_plugin.channel = channel;
+        tencent_im_sdk_plugin.channels.add(channel);
         tencent_im_sdk_plugin.messageManager = new MessageManager(channel);
         tencent_im_sdk_plugin.groupManager = new GroupManager(channel);
         tencent_im_sdk_plugin.signalingManager = new SignalingManager(channel);
@@ -78,7 +80,7 @@ tencent_im_sdk_plugin implements FlutterPlugin, MethodChannel.MethodCallHandler 
     @Override
     public void onAttachedToEngine(FlutterPlugin.FlutterPluginBinding flutterPluginBinding) {
         Log.i(TAG, "onAttachedToEngine");
-        channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "tencent_im_sdk_plugin");
+        MethodChannel channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "tencent_im_sdk_plugin");
         mApplication = (Application) flutterPluginBinding.getApplicationContext();
         channel.setMethodCallHandler(new tencent_im_sdk_plugin(mApplication.getApplicationContext(), channel));
     }
@@ -104,13 +106,13 @@ tencent_im_sdk_plugin implements FlutterPlugin, MethodChannel.MethodCallHandler 
             method = field.get(new Object()).getClass().getDeclaredMethod(call.method, MethodCall.class, Result.class);
             method.invoke(field.get(new Object()), call, result);
             try {
-                IMLog.i(TAG,call.<HashMap<String,Object>>arguments().toString());
+                CommonUtil.writeLog(call.<HashMap<String,Object>>arguments().toString(),false);
             }catch (Exception e){
                 System.out.println("print log error");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            IMLog.writeException(TAG, "flutter invoke native method fail", e);
+            CommonUtil.writeLog("flutter invoke native method fail "+e.toString(),false);
         }
     }
 
@@ -118,8 +120,17 @@ tencent_im_sdk_plugin implements FlutterPlugin, MethodChannel.MethodCallHandler 
     @Override
     public void onDetachedFromEngine(FlutterPluginBinding binding) {
         Log.i(TAG, "onDetachedFromEngine");
-        channel.setMethodCallHandler(null);
-        channel = null;
+        for (MethodChannel channel : channels) {
+            channel.setMethodCallHandler(null);
+        }
+        channels = new LinkedList<>();
+        MessageManager.cleanChannels();
+        TimManager.cleanChannels();
+        GroupManager.cleanChannels();
+        OfflinePushManager.cleanChannels();
+        FriendshipManager.cleanChannels();
+        SignalingManager.cleanChannels();
+        ConversationManager.cleanChannels();
         // 为了适配flutter多引擎开发模式，这里不在onDetachedFromEngine生命周期把chanel移除
     }
 

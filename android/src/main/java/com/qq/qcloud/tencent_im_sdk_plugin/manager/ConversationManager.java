@@ -19,13 +19,17 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 
 public class ConversationManager {
-    private static MethodChannel channel;
+    private static List<MethodChannel> channels = new LinkedList<>();
     private static  HashMap<String, V2TIMConversationListener> conversationListenerList= new HashMap();
     public ConversationManager(MethodChannel _channel){
-        ConversationManager.channel = _channel;
+        ConversationManager.channels.add(_channel);
     }
 
-    public  void setConversationListener(MethodCall methodCall, final MethodChannel.Result result){
+    public static void cleanChannels(){
+        channels = new LinkedList<>();
+    }
+
+    public void setConversationListener(MethodCall methodCall, final MethodChannel.Result result){
         final String listenerUuid = methodCall.argument("listenerUuid");
         V2TIMManager.getConversationManager().setConversationListener(new V2TIMConversationListener() {
             @Override
@@ -131,7 +135,7 @@ public class ConversationManager {
         }
     }
 
-    public void  addConversationListener(MethodCall call,final MethodChannel.Result result){
+    public void addConversationListener(MethodCall call,final MethodChannel.Result result){
         final String listenerUuid = CommonUtil.getParam(call,result,"listenerUuid");
         final V2TIMConversationListener conversationLister = new V2TIMConversationListener() {
             @Override
@@ -226,7 +230,7 @@ public class ConversationManager {
     }
 
 
-    public  void  getConversation(MethodCall methodCall,final  MethodChannel.Result result){
+    public void getConversation(MethodCall methodCall,final  MethodChannel.Result result){
         String conversationID = CommonUtil.getParam(methodCall,result,"conversationID");
         V2TIMManager.getConversationManager().getConversation(conversationID, new V2TIMValueCallback<V2TIMConversation>() {
             @Override
@@ -241,7 +245,9 @@ public class ConversationManager {
         });
     }
     private <T> void  makeConversationListenerEventData(String type,T data, String listenerUuid){
-        CommonUtil.emitEvent(ConversationManager.channel,"conversationListener",type,data, listenerUuid);
+        for (MethodChannel channel : channels) {
+            CommonUtil.emitEvent(channel,"conversationListener",type,data, listenerUuid);
+        }
     }
     public void getConversationList(MethodCall methodCall, final MethodChannel.Result result){
         String nextSeq = CommonUtil.getParam(methodCall,result,"nextSeq");
@@ -324,7 +330,7 @@ public class ConversationManager {
         // session id
         String conversationID = CommonUtil.getParam(methodCall, result, "conversationID");
         String draftText = CommonUtil.getParam(methodCall, result, "draftText");
-        if(draftText==""){
+        if(draftText == ""){
             draftText = null;
         }
         V2TIMManager.getConversationManager().setConversationDraft(conversationID,draftText, new V2TIMCallback() {
