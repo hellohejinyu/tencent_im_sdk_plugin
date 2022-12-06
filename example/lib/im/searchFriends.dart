@@ -1,10 +1,12 @@
-import 'package:flutter/material.dart';
+import 'package:example/i18n/i18n_utils.dart';
 import 'package:example/utils/sdkResponse.dart';
+import 'package:flutter/material.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_search_param.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
-import 'package:example/i18n/i18n_utils.dart';
 
 class SearchFriends extends StatefulWidget {
+  const SearchFriends({Key? key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => SearchFriendsState();
 }

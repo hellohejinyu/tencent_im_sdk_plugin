@@ -1,19 +1,21 @@
-import 'package:flutter/material.dart';
+import 'package:example/i18n/i18n_utils.dart';
 import 'package:example/im/conversationSelector.dart';
 import 'package:example/im/messageSelector.dart';
 import 'package:example/utils/sdkResponse.dart';
+import 'package:flutter/material.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
-import 'package:example/i18n/i18n_utils.dart';
 
 class RevokeMessage extends StatefulWidget {
+  const RevokeMessage({Key? key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => RevokeMessageState();
 }
 
 class RevokeMessageState extends State<RevokeMessage> {
   Map<String, dynamic>? resData;
-  List<String> conversaions = List.empty(growable: true);
+  List<String> conversations = List.empty(growable: true);
   List<String> msgIDs = List.empty(growable: true);
   revokeMessage() async {
     // 注意：web中webMessageInstatnce 为必填写
@@ -38,17 +40,17 @@ class RevokeMessageState extends State<RevokeMessage> {
               ConversationSelector(
                 onSelect: (data) {
                   setState(() {
-                    conversaions = data;
+                    conversations = data;
                   });
                 },
                 switchSelectType: true,
-                value: conversaions,
+                value: conversations,
               ),
               Expanded(
                 child: Container(
                   margin: const EdgeInsets.only(left: 10),
-                  child: Text(conversaions.isNotEmpty
-                      ? conversaions.toString()
+                  child: Text(conversations.isNotEmpty
+                      ? conversations.toString()
                       : imt("未选择")),
                 ),
               )
@@ -57,7 +59,7 @@ class RevokeMessageState extends State<RevokeMessage> {
           Row(
             children: [
               MessageSelector(
-                conversaions.isNotEmpty ? conversaions.first : "",
+                conversations.isNotEmpty ? conversations.first : "",
                 msgIDs,
                 (data) {
                   setState(() {

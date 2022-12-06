@@ -1,12 +1,12 @@
-import 'package:flutter/material.dart';
+import 'package:example/i18n/i18n_utils.dart';
 import 'package:example/im/conversationSelector.dart';
 import 'package:example/im/messageSelector.dart';
 import 'package:example/utils/sdkResponse.dart';
+import 'package:flutter/material.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
-import 'package:example/i18n/i18n_utils.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/enum/get_group_message_read_member_list_filter.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_message_read_member_list.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_value_callback.dart';
-import 'package:tencent_im_sdk_plugin_platform_interface/enum/get_group_message_read_member_list_filter.dart';
 
 class GetGroupMessageReadMemberList extends StatefulWidget {
   @override
@@ -35,68 +35,66 @@ class GetGroupMessageReadMemberListState
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          Row(
-            children: [
-              ConversationSelector(
-                onSelect: (data) {
-                  setState(() {
-                    conversaions = data;
-                  });
-                },
-                switchSelectType: true,
-                value: conversaions,
+    return Column(
+      children: [
+        Row(
+          children: [
+            ConversationSelector(
+              onSelect: (data) {
+                setState(() {
+                  conversaions = data;
+                });
+              },
+              switchSelectType: true,
+              value: conversaions,
+            ),
+            Expanded(
+              child: Container(
+                margin: const EdgeInsets.only(left: 10),
+                child: Text(
+                  conversaions.isNotEmpty
+                      ? conversaions.toString()
+                      : imt("未选择,这里只能选群消息，且非自己发的消息"),
+                ),
               ),
-              Expanded(
+            )
+          ],
+        ),
+        Row(
+          children: [
+            MessageSelector(
+              conversaions.isNotEmpty ? conversaions.first : "",
+              msgIDs,
+              (data) {
+                setState(() {
+                  msgIDs = data;
+                });
+              },
+            ),
+            Expanded(
                 child: Container(
-                  margin: const EdgeInsets.only(left: 10),
-                  child: Text(
-                    conversaions.isNotEmpty
-                        ? conversaions.toString()
-                        : imt("未选择,这里只能选群消息，且非自己发的消息"),
-                  ),
-                ),
-              )
-            ],
-          ),
-          Row(
-            children: [
-              MessageSelector(
-                conversaions.isNotEmpty ? conversaions.first : "",
-                msgIDs,
-                (data) {
-                  setState(() {
-                    msgIDs = data;
-                  });
-                },
+              margin: const EdgeInsets.only(left: 12),
+              child: Text(msgIDs.toString()),
+            ))
+          ],
+        ),
+        Row(
+          children: [
+            Expanded(
+              child: ElevatedButton(
+                onPressed: getGroupMessageReadMemberList,
+                child: Text(imt("获取群消息已读（未读）成员列表")),
               ),
-              Expanded(
-                  child: Container(
-                margin: const EdgeInsets.only(left: 12),
-                child: Text(msgIDs.toString()),
-              ))
-            ],
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: getGroupMessageReadMemberList,
-                  child: Text(imt("获取群消息已读（未读）成员列表")),
-                ),
-              )
-            ],
-          ),
-          Row(
-            children: const [
-              Text("群已读回执需要先到控制台开通"),
-            ],
-          ),
-          SDKResponse(resData),
-        ],
-      ),
+            )
+          ],
+        ),
+        Row(
+          children: const [
+            Text("群已读回执需要先到控制台开通"),
+          ],
+        ),
+        SDKResponse(resData),
+      ],
     );
   }
 }

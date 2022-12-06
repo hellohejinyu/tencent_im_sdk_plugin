@@ -9,6 +9,8 @@ import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
 
 class GetGroupMemberList extends StatefulWidget {
+  const GetGroupMemberList({Key? key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => GetGroupMemberListState();
 }
@@ -38,146 +40,141 @@ class GetGroupMemberListState extends State<GetGroupMemberList> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          Row(
-            children: [
-              GroupSelector(
-                onSelect: (data) {
-                  setState(() {
-                    group = data;
-                  });
-                },
-                switchSelectType: true,
-                value: group,
+    return Column(
+      children: [
+        Row(
+          children: [
+            GroupSelector(
+              onSelect: (data) {
+                setState(() {
+                  group = data;
+                });
+              },
+              switchSelectType: true,
+              value: group,
+            ),
+            Expanded(
+              child: Container(
+                margin: const EdgeInsets.only(left: 10),
+                child: Text(group.isNotEmpty ? group.toString() : imt("未选择")),
               ),
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.only(left: 10),
-                  child: Text(group.isNotEmpty ? group.toString() : imt("未选择")),
-                ),
-              )
-            ],
-          ),
-          Container(
-            height: 60,
-            decoration: const BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                  color: Colors.black45,
-                ),
+            )
+          ],
+        ),
+        Container(
+          height: 60,
+          decoration: const BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: Colors.black45,
               ),
             ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      showAdaptiveActionSheet(
-                        context: context,
-                        title: const Text('filter'),
-                        actions: <BottomSheetAction>[
-                          BottomSheetAction(
-                            title:
-                                const Text('V2TIM_GROUP_MEMBER_FILTER_ADMIN'),
-                            onPressed: (_) {
-                              setState(() {
-                                filter = GroupMemberFilterTypeEnum
-                                    .V2TIM_GROUP_MEMBER_FILTER_ADMIN;
-                              });
-                              Navigator.pop(context);
-                            },
-                          ),
-                          BottomSheetAction(
-                            title: const Text('V2TIM_GROUP_MEMBER_FILTER_ALL'),
-                            onPressed: (_) {
-                              setState(() {
-                                filter = GroupMemberFilterTypeEnum
-                                    .V2TIM_GROUP_MEMBER_FILTER_ALL;
-                              });
-                              Navigator.pop(context);
-                            },
-                          ),
-                          BottomSheetAction(
-                            title:
-                                const Text('V2TIM_GROUP_MEMBER_FILTER_COMMON'),
-                            onPressed: (_) {
-                              setState(() {
-                                filter = GroupMemberFilterTypeEnum
-                                    .V2TIM_GROUP_MEMBER_FILTER_COMMON;
-                              });
-                              Navigator.pop(context);
-                            },
-                          ),
-                          BottomSheetAction(
-                            title:
-                                const Text('V2TIM_GROUP_MEMBER_FILTER_OWNER'),
-                            onPressed: (_) {
-                              setState(() {
-                                filter = GroupMemberFilterTypeEnum
-                                    .V2TIM_GROUP_MEMBER_FILTER_OWNER;
-                              });
-                              Navigator.pop(context);
-                            },
-                          ),
-                        ],
-                        cancelAction: CancelAction(
-                          title: const Text('Cancel'),
-                        ), // onPressed parameter is optional by default will dismiss the ActionSheet
-                      );
-                    },
-                    child: Text(imt("选择优先级")),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(left: 12),
-                  child: Text("已选：$filter"),
-                )
-              ],
-            ),
           ),
-          Row(
+          child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                height: 60,
-                child: const Text(
-                  "nextSeq",
-                  style: TextStyle(height: 1),
+                child: ElevatedButton(
+                  onPressed: () {
+                    showAdaptiveActionSheet(
+                      context: context,
+                      title: const Text('filter'),
+                      actions: <BottomSheetAction>[
+                        BottomSheetAction(
+                          title: const Text('V2TIM_GROUP_MEMBER_FILTER_ADMIN'),
+                          onPressed: (_) {
+                            setState(() {
+                              filter = GroupMemberFilterTypeEnum
+                                  .V2TIM_GROUP_MEMBER_FILTER_ADMIN;
+                            });
+                            Navigator.pop(context);
+                          },
+                        ),
+                        BottomSheetAction(
+                          title: const Text('V2TIM_GROUP_MEMBER_FILTER_ALL'),
+                          onPressed: (_) {
+                            setState(() {
+                              filter = GroupMemberFilterTypeEnum
+                                  .V2TIM_GROUP_MEMBER_FILTER_ALL;
+                            });
+                            Navigator.pop(context);
+                          },
+                        ),
+                        BottomSheetAction(
+                          title: const Text('V2TIM_GROUP_MEMBER_FILTER_COMMON'),
+                          onPressed: (_) {
+                            setState(() {
+                              filter = GroupMemberFilterTypeEnum
+                                  .V2TIM_GROUP_MEMBER_FILTER_COMMON;
+                            });
+                            Navigator.pop(context);
+                          },
+                        ),
+                        BottomSheetAction(
+                          title: const Text('V2TIM_GROUP_MEMBER_FILTER_OWNER'),
+                          onPressed: (_) {
+                            setState(() {
+                              filter = GroupMemberFilterTypeEnum
+                                  .V2TIM_GROUP_MEMBER_FILTER_OWNER;
+                            });
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ],
+                      cancelAction: CancelAction(
+                        title: const Text('Cancel'),
+                      ), // onPressed parameter is optional by default will dismiss the ActionSheet
+                    );
+                  },
+                  child: Text(imt("选择优先级")),
                 ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(left: 12),
+                child: Text("已选：$filter"),
+              )
+            ],
+          ),
+        ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              height: 60,
+              child: const Text(
+                "nextSeq",
+                style: TextStyle(height: 1),
+              ),
+              alignment: Alignment.centerLeft,
+            ),
+            Expanded(
+              child: Container(
+                height: 60,
+                child: Text(
+                  nextSeq.toString(),
+                  style: const TextStyle(
+                    height: 1,
+                    textBaseline: TextBaseline.ideographic,
+                  ),
+                ),
+                margin: const EdgeInsets.only(left: 12),
                 alignment: Alignment.centerLeft,
               ),
-              Expanded(
-                child: Container(
-                  height: 60,
-                  child: Text(
-                    nextSeq.toString(),
-                    style: const TextStyle(
-                      height: 1,
-                      textBaseline: TextBaseline.ideographic,
-                    ),
-                  ),
-                  margin: const EdgeInsets.only(left: 12),
-                  alignment: Alignment.centerLeft,
-                ),
-              )
-            ],
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: getGroupMemberList,
-                  child: Text(imt("获取群成员列表")),
-                ),
-              )
-            ],
-          ),
-          SDKResponse(resData),
-        ],
-      ),
+            )
+          ],
+        ),
+        Row(
+          children: [
+            Expanded(
+              child: ElevatedButton(
+                onPressed: getGroupMemberList,
+                child: Text(imt("获取群成员列表")),
+              ),
+            )
+          ],
+        ),
+        SDKResponse(resData),
+      ],
     );
   }
 }

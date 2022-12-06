@@ -1,6 +1,6 @@
 name: tencent_im_sdk_plugin
 description: Tencent Cloud Chat SDK. Globally interconnected In-App Chat, user profile and relationship chains and offline push.
-version: 4.2.0
+version: 4.2.1
 homepage: https://www.tencentcloud.com/products/im
 documentation: https://comm.qq.com/im/doc/flutter/en/SDKAPI/readme.html
 repository: https://github.com/TencentCloud/TIMSDK/tree/master/Flutter/IMSDK/im-flutter-plugin/tencent_im_sdk_plugin
@@ -13,7 +13,7 @@ platforms:
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
-  flutter: "^2.0.0"
+  flutter: "^3.0.0"
 
 dependencies:
   flutter:
@@ -22,8 +22,6 @@ dependencies:
     sdk: flutter
   json_annotation: ^4.0.1
   tencent_im_sdk_plugin_platform_interface: 0.3.6
-  # tencent_im_sdk_plugin_platform_interface:
-  #   path: ../tencent_im_sdk_plugin_platform_interface
   uuid: ^3.0.5
 
 dev_dependencies:

@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
+import 'package:example/i18n/i18n_utils.dart';
 import 'package:example/im/conversationSelector.dart';
 import 'package:example/utils/sdkResponse.dart';
+import 'package:flutter/material.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
-import 'package:example/i18n/i18n_utils.dart';
 
 class SetConversationDraft extends StatefulWidget {
   @override
@@ -28,56 +28,54 @@ class SetConversationDraftState extends State<SetConversationDraft> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          Row(
-            children: [
-              ConversationSelector(
-                onSelect: (data) {
-                  setState(() {
-                    conversaions = data;
-                  });
-                },
-                switchSelectType: true,
-                value: conversaions,
+    return Column(
+      children: [
+        Row(
+          children: [
+            ConversationSelector(
+              onSelect: (data) {
+                setState(() {
+                  conversaions = data;
+                });
+              },
+              switchSelectType: true,
+              value: conversaions,
+            ),
+            Expanded(
+              child: Container(
+                margin: const EdgeInsets.only(left: 10),
+                child: Text(conversaions.isNotEmpty
+                    ? conversaions.toString()
+                    : imt("未选择")),
               ),
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.only(left: 10),
-                  child: Text(conversaions.isNotEmpty
-                      ? conversaions.toString()
-                      : imt("未选择")),
-                ),
-              )
-            ],
-          ),
-          Row(
-            children: [
-              Text(imt("设置草稿/取消草稿")),
-              Switch(
-                value: isSetting,
-                onChanged: (res) {
-                  setState(() {
-                    isSetting = res;
-                  });
-                },
-              )
-            ],
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: setConversationDraft,
-                  child: Text(imt("设置会话草稿")),
-                ),
-              )
-            ],
-          ),
-          SDKResponse(resData),
-        ],
-      ),
+            )
+          ],
+        ),
+        Row(
+          children: [
+            Text(imt("设置草稿/取消草稿")),
+            Switch(
+              value: isSetting,
+              onChanged: (res) {
+                setState(() {
+                  isSetting = res;
+                });
+              },
+            )
+          ],
+        ),
+        Row(
+          children: [
+            Expanded(
+              child: ElevatedButton(
+                onPressed: setConversationDraft,
+                child: Text(imt("设置会话草稿")),
+              ),
+            )
+          ],
+        ),
+        SDKResponse(resData),
+      ],
     );
   }
 }
