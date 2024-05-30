@@ -133,6 +133,11 @@ public class CommonUtil {
         return par;
     }
 
+    public static Long getLongParam(MethodCall methodCall, MethodChannel.Result result, String param) {
+        Number number = methodCall.argument(param);
+        return number.longValue();
+    }
+
     /**
      * Run the main thread and return the result to execute
      *

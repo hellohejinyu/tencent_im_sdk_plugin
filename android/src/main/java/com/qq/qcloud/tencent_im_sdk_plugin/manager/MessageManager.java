@@ -2010,10 +2010,9 @@ public class MessageManager {
     public void getGroupMessageReadMemberList(MethodCall methodCall, final MethodChannel.Result result){
         final String messageID = CommonUtil.getParam(methodCall,result,"messageID");
         final int filter = CommonUtil.getParam(methodCall,result,"filter");
-        final int nextSeqParams = CommonUtil.getParam(methodCall,result,"nextSeq");
         final int count = CommonUtil.getParam(methodCall,result,"count");
-        final long nextSeq = new Long(nextSeqParams);
-        
+        final long nextSeq = CommonUtil.getLongParam(methodCall,result,"nextSeq");
+
         LinkedList<String> msgList = new LinkedList<>();
 
         msgList.add(messageID);
